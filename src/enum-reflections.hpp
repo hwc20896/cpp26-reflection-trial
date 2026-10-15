@@ -1,5 +1,10 @@
 #pragma once
 
+//  This file only consists reflection methods about ENUMS.
+//  Enum-flavored facade over the generic walkers in reflection-util.hpp:
+//  each query is a variable template sized by enum_size, paired with lookup
+//  functions (to_index, enum_from_name) built on top of those arrays.
+
 #include <meta>
 
 #include <array>
@@ -13,11 +18,6 @@
 #include <utility>
 
 #include "reflection-util.hpp"
-
-//  This file only consists reflection methods about ENUMS.
-//  Enum-flavored facade over the generic walkers in reflection-util.hpp:
-//  each query is a variable template sized by enum_size, paired with lookup
-//  functions (to_index, enum_from_name) built on top of those arrays.
 
 namespace detail {
     //  True when the enumerators are 0, 1, 2, ... in declaration order

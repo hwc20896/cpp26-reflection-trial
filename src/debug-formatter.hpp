@@ -24,22 +24,6 @@
 #include "enum-reflections.hpp"
 #include "reflection-util.hpp"
 
-//  Declare a payload-less tag annotation plus its detection concept `x_derived`.
-//  Attach with ANNOTATION(x); test with x_derived<T>.
-#define DEFINE_ANNO_TAG(x)\
-    inline constexpr struct _##x##_t final {} x;\
-    template <class T>\
-    concept x##_derived = detail::has_annotation<T, _##x##_t>;
-
-//  Declare an annotation class with payload plus its detection concept.
-//  Follow the invocation with the class body (and a trailing `;`), e.g.:
-//    DEFINE_ANNO_CLASS(rename) { const char* rename_to; ... };
-#define DEFINE_ANNO_CLASS(x)\
-    struct x;\
-    template <class T>\
-    concept x##_derived = detail::has_annotation<T, x>;\
-    struct x
-
 namespace detail {
     //  Write one char in Rust Debug escape style: `\\`, `\n`, `\r`, `\t`,
     //  `\0`, the `quote` character itself, and `\u{XX}` for other control
