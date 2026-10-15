@@ -106,7 +106,6 @@ Suggested reading order; every file is one layer:
 
 - **Access control**: the record formatter reflects with `std::meta::access_context::current()`, so it only sees members accessible at the point of instantiation. Types with private fields need the instantiation to happen where access exists.
 - **No format spec**: `{}` only — `{:#?}`-style flags, widths, and alignment are not implemented.
-- **Wild enum values**: `to_index()` throws `std::out_of_range` for non-sequential enums, but takes an unchecked fast path for sequential zero-based enums.
 - **String payloads in annotations** must live in static storage; see `StrAnnotation` in `annotations.hpp` for the `std::define_static_string` pattern that makes this work.
 
 ## References

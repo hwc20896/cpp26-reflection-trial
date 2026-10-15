@@ -10,6 +10,7 @@
 #include <string_view>
 #include <tuple>
 #include <type_traits>
+#include <utility>
 
 #include "reflection-util.hpp"
 
@@ -60,16 +61,22 @@ inline constexpr std::array<std::tuple<std::string_view, E>, enum_size<E>> enum_
     = detail::metadata_multiple_array<E>(&std::meta::identifier_of, &std::meta::extract<E>);
 
 //  Index of `e` in declaration order.
-//  Fast path: for sequential zero-based enums the integer value is the index;
-//  otherwise a linear search runs and throws std::out_of_range if `e` is not found.
+//  Fast path: for sequential zero-based enums the underlying value is the index,
+//  range-checked against [0, enum_size<E>); otherwise a linear search runs.
+//  Throws std::out_of_range if `e` is not an enumerator (e.g. a wild value).
 template <detail::is_enum E>
 constexpr std::size_t to_index(E e) {
     if constexpr (detail::is_sequential_zero_based<E>()) {
-        return static_cast<std::size_t>(e);
+        if (const auto v = std::to_underlying(e);
+            std::cmp_greater_equal(v, 0) && std::cmp_less(v, enum_size<E>)
+        )
+            return static_cast<std::size_t>(v);
     }
-    for (std::size_t i = 0; i < enum_size<E>; ++i) {
-        if (enum_values<E>[i] == e) {
-            return i;
+    else {
+        for (std::size_t i = 0; i < enum_size<E>; ++i) {
+            if (enum_values<E>[i] == e) {
+                return i;
+            }
         }
     }
     throw std::out_of_range("Enum value not found");
